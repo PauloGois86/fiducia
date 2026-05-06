@@ -1,0 +1,8 @@
+﻿DATABASE_URL=postgresql://postgres:goistt86@localhost:5432/fiducia_db
+SECRET_KEY=a_password_é_a_de_testes_alterar_antes_de_produção
+TELEGRAM_TOKEN=8653391647:AAGyRpubPzOcI2DAnSh74n2RlTXoRtK01yk
+TELEGRAM_CHAT_ID=-5293130941
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=email@gmail.com
+SMTP_PASSWORD=app_password_aqui
