@@ -9,13 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 const ESTADOS = ['Recebida', 'Aguarda Tecido', 'Corte', 'Producao', 'Pendente', 'Pronta', 'Enviada']
 
 const ESTADO_COR = {
-  'Recebida':      'bg-blue-100 text-blue-800',
-  'Aguarda Tecido':'bg-yellow-100 text-yellow-800',
-  'Corte':         'bg-orange-100 text-orange-800',
-  'Producao':      'bg-purple-100 text-purple-800',
-  'Pendente':      'bg-red-100 text-red-800',
-  'Pronta':        'bg-green-100 text-green-800',
-  'Enviada':       'bg-slate-100 text-slate-600',
+  'Recebida': 'bg-blue-100 text-blue-800',
+  'Aguarda Tecido': 'bg-yellow-100 text-yellow-800',
+  'Corte': 'bg-orange-100 text-orange-800',
+  'Producao': 'bg-purple-100 text-purple-800',
+  'Pendente': 'bg-red-100 text-red-800',
+  'Pronta': 'bg-green-100 text-green-800',
+  'Enviada': 'bg-slate-100 text-slate-600',
 }
 
 export default function Encomendas() {
@@ -58,6 +58,9 @@ export default function Encomendas() {
           <Button size="sm" onClick={() => navigate('/')}>+ Nova Encomenda</Button>
           <Button variant="outline" size="sm" onClick={logout}>Sair</Button>
         </div>
+        {loja?.is_admin && (
+          <Button variant="outline" size="sm" onClick={() => navigate('/admin')}>Admin</Button>
+        )}
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">

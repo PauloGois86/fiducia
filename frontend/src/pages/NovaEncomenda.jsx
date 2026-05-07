@@ -75,7 +75,7 @@ export default function NovaEncomenda() {
 
   useEffect(() => {
     api.get('/clientes/').then((r) => setClientes(r.data))
-    api.get('/colarinhos/globais').then((r) => setColarinhosGlobais(r.data)).catch(() => {})
+    api.get('/colarinhos/globais').then((r) => setColarinhosGlobais(r.data)).catch(() => { })
   }, [])
 
   const setAjuste = (key, val) => setAjustes((prev) => ({ ...prev, [key]: val }))
@@ -101,10 +101,10 @@ export default function NovaEncomenda() {
         ...(modoMedida === 'size_set'
           ? { tamanho_base: tamanhoBase, ...ajustes }
           : Object.fromEntries(
-              Object.entries(medidasDiretas)
-                .filter(([, v]) => v !== '')
-                .map(([k, v]) => [k, Number(v)])
-            )
+            Object.entries(medidasDiretas)
+              .filter(([, v]) => v !== '')
+              .map(([k, v]) => [k, Number(v)])
+          )
         ),
         tipo_corpo: tipoCorpo || undefined,
         inclinacao_ombro: inclinacaoOmbro || undefined,
@@ -136,6 +136,9 @@ export default function NovaEncomenda() {
             <h1 className="font-bold text-slate-800">Fiducia Atelier</h1>
             <p className="text-xs text-slate-500">{loja?.nome}</p>
           </div>
+          {loja?.is_admin && (
+            <Button variant="outline" size="sm" onClick={() => navigate('/admin')}>Admin</Button>
+          )}
         </div>
         <Button variant="outline" size="sm" onClick={logout}>Sair</Button>
       </header>

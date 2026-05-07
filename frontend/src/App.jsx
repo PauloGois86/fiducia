@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import NovaEncomenda from './pages/NovaEncomenda'
 import Encomendas from './pages/Encomendas'
 import DetalheEncomenda from './pages/DetalheEncomenda'
+import Admin from './pages/Admin'
 
 function PrivateRoute({ children }) {
   const { loja } = useAuth()
@@ -18,6 +19,7 @@ function AppRoutes() {
       <Route path="/" element={<PrivateRoute><NovaEncomenda /></PrivateRoute>} />
       <Route path="/encomendas" element={<PrivateRoute><Encomendas /></PrivateRoute>} />
       <Route path="/encomendas/:id" element={<PrivateRoute><DetalheEncomenda /></PrivateRoute>} />
+      <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
@@ -33,3 +35,4 @@ export default function App() {
     </AuthProvider>
   )
 }
+
