@@ -19,7 +19,13 @@ def get_current_loja(
     )
     try:
         payload = decode_token(token)
-        loja_id: int = payload.get("sub")
+        loja_id = payload.get("sub")
+        if loja_id is None:
+            raise credentials_exception
+        loja_id = int(loja_id)  # converte string → int
+        if loja_id is None:
+            raise credentials_exception
+        loja_id = int(loja_id)
         if loja_id is None:
             raise credentials_exception
     except JWTError:
