@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr
 from app.core.database import get_db
 from app.core.security import hash_password, verify_password, create_access_token
 from app.models.models import Loja
+from typing import Optional
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -18,7 +19,8 @@ class LojaOut(BaseModel):
     id: int
     nome: str
     email: str
-    telefone: str | None
+    telefone: Optional[str] = None
+    is_admin: bool = False
 
     model_config = {"from_attributes": True}
 

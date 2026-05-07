@@ -22,16 +22,16 @@ def get_current_loja(
         loja_id = payload.get("sub")
         if loja_id is None:
             raise credentials_exception
-        loja_id = int(loja_id)  # converte string → int
-        if loja_id is None:
-            raise credentials_exception
         loja_id = int(loja_id)
-        if loja_id is None:
-            raise credentials_exception
     except JWTError:
         raise credentials_exception
 
     loja = db.query(Loja).filter(Loja.id == loja_id, Loja.ativo == True).first()
     if loja is None:
         raise credentials_exception
+    return loja
+
+def get_admin(loja: Loja = Depends(get_current_loja)) -> Loja:
+    if not loja.is_admin:
+        raise HTTPException(status_code=403, detail="Acesso restrito a administradores")
     return loja

@@ -1,7 +1,6 @@
 ﻿from app.core.database import SessionLocal, engine
 from app.core.security import hash_password
-from app.models.models import Base, TamanhoStandard, TamanhoEnum, ModeloColarinhoGlobal, Loja, Cliente
-
+from app.models.models import Base, TamanhoStandard, TamanhoEnum, ModeloColarinhoGlobal, Loja, Cliente, Encomenda, ModoMedidaEnum, EstadoEncomendaEnum
 STANDARD = [
     {"tamanho": TamanhoEnum.XS,   "colarinho": "36",    "peito": 98,  "cinta": 88,  "anca": 94,  "comprimento_costas": 74, "comprimento_frente": 70, "ombro": 40, "comprimento_manga": 63, "largura_punho": 23, "bicep": 32.6},
     {"tamanho": TamanhoEnum.S,    "colarinho": "37/38", "peito": 104, "cinta": 94,  "anca": 100, "comprimento_costas": 76, "comprimento_frente": 72, "ombro": 42, "comprimento_manga": 64, "largura_punho": 24, "bicep": 33.8},
@@ -15,9 +14,10 @@ STANDARD = [
 COLARINHOS = ["Italiano", "Frances", "Button-Down", "Mao", "Cutaway", "Classico"]
 
 LOJAS_MOCK = [
-    {"nome": "Loja Cintado Lisboa",   "email": "lisboa@cintado.pt",  "telefone": "211234567", "password": "loja123"},
-    {"nome": "Loja Cintado Porto",    "email": "porto@cintado.pt",   "telefone": "222345678", "password": "loja123"},
-    {"nome": "Loja Cintado Coimbra",  "email": "coimbra@cintado.pt", "telefone": "239456789", "password": "loja123"},
+    {"nome": "Administrador",        "email": "geral.fiducia@gmail.com",   "telefone": "", "password": "admin123", "is_admin": True},
+    {"nome": "Loja Cintado Lisboa",  "email": "lisboa@cintado.pt",  "telefone": "211234567", "password": "loja123", "is_admin": False},
+    {"nome": "Loja Cintado Porto",   "email": "porto@cintado.pt",   "telefone": "222345678", "password": "loja123", "is_admin": False},
+    {"nome": "Loja Cintado Coimbra", "email": "coimbra@cintado.pt", "telefone": "239456789", "password": "loja123", "is_admin": False},
 ]
 
 CLIENTES_MOCK = [
@@ -27,6 +27,58 @@ CLIENTES_MOCK = [
     (1, "Carlos Mendes",    "carlos@email.pt",   "912000003"),
     (1, "António Silva",    "antonio@email.pt",  "912000004"),  # mesmo nome, loja diferente
     (2, "Diana Costa",      "diana@email.pt",    "912000005"),
+]
+
+ENCOMENDAS_MOCK = [
+    {
+        "loja_idx": 1, "cliente_idx": 0,
+        "modo_medida": ModoMedidaEnum.SIZE_SET, "tamanho_base": TamanhoEnum.M,
+        "aj_peito": -2, "aj_cinta": -4, "aj_comprimento_manga": 1,
+        "ref_tecido": "Oxford Branco 100% Algodão", "manga": "Longa",
+        "modelo_punho": "Simples", "cor_botao": "Branco",
+        "mono_texto": "ASG", "mono_local": "Punho esquerdo", "mono_cor": "Azul Navy",
+        "estado": EstadoEncomendaEnum.PRODUCAO,
+        "observacoes": "Cliente prefere colarinho com mais altura",
+    },
+    {
+        "loja_idx": 1, "cliente_idx": 1,
+        "modo_medida": ModoMedidaEnum.SIZE_SET, "tamanho_base": TamanhoEnum.L,
+        "aj_peito": 2, "aj_cinta": 0, "aj_comprimento_manga": 0,
+        "ref_tecido": "Twill Azul Marinho", "manga": "Longa",
+        "modelo_punho": "Duplo", "cor_botao": "Azul",
+        "estado": EstadoEncomendaEnum.RECEBIDA,
+        "observacoes": None,
+    },
+    {
+        "loja_idx": 2, "cliente_idx": 2,
+        "modo_medida": ModoMedidaEnum.DIRETO,
+        "peito": 108.0, "cinta": 96.0, "anca": 104.0, "ombro": 45.0,
+        "comprimento_costas": 79.0, "comprimento_frente": 75.0,
+        "comprimento_manga": 66.0, "largura_punho": 25.5, "bicep": 36.0,
+        "ref_tecido": "Linho Bege", "manga": "Curta",
+        "modelo_punho": "Simples", "cor_botao": "Bege",
+        "estado": EstadoEncomendaEnum.PRONTA,
+        "observacoes": "Urgente — cliente viaja na próxima semana",
+    },
+    {
+        "loja_idx": 2, "cliente_idx": 3,
+        "modo_medida": ModoMedidaEnum.SIZE_SET, "tamanho_base": TamanhoEnum.XL,
+        "aj_peito": 0, "aj_cinta": -2, "aj_comprimento_manga": 2,
+        "ref_tecido": "Popelina Branca", "manga": "Longa",
+        "modelo_punho": "Simples", "cor_botao": "Branco",
+        "estado": EstadoEncomendaEnum.ENVIADA,
+        "observacoes": None,
+    },
+    {
+        "loja_idx": 3, "cliente_idx": 4,
+        "modo_medida": ModoMedidaEnum.SIZE_SET, "tamanho_base": TamanhoEnum.S,
+        "aj_peito": -2, "aj_cinta": -2, "aj_comprimento_manga": -1,
+        "ref_tecido": "Flanela Cinza", "manga": "Longa",
+        "modelo_punho": "Duplo", "cor_botao": "Cinza",
+        "mono_texto": "DC", "mono_local": "Peito", "mono_cor": "Branco",
+        "estado": EstadoEncomendaEnum.AGUARDA_TECIDO,
+        "observacoes": None,
+    },
 ]
 
 def seed():
@@ -53,6 +105,7 @@ def seed():
                     nome=l["nome"],
                     email=l["email"],
                     telefone=l["telefone"],
+                    is_admin=l["is_admin"],
                     password_hash=hash_password(l["password"])
                 )
                 db.add(loja)
@@ -73,6 +126,35 @@ def seed():
                 )
                 db.add(cliente)
             print("✅ Clientes mock inseridos")
+
+        # Encomendas mock
+                # Encomendas mockprint(f"Encomendas na BD: {db.query(Encomenda).count()}")
+        print(f"Lojas criadas: {len(lojas_criadas)}")
+        clientes_db = db.query(Cliente).all()
+        print(f"Clientes na BD: {len(clientes_db)}")
+
+        if not db.query(Encomenda).first():
+            numero = 1
+            for e in ENCOMENDAS_MOCK:
+                dados = e.copy()
+                loja_idx = dados.pop("loja_idx")
+                cliente_idx = dados.pop("cliente_idx")
+                loja_enc = lojas_criadas[loja_idx]
+                clientes_loja = [c for c in clientes_db if c.loja_id == loja_enc.id]
+                print(f"  Loja {loja_enc.nome}: {len(clientes_loja)} clientes")
+                if not clientes_loja:
+                    print(f"  ⚠️ Sem clientes para loja {loja_enc.nome}, a saltar")
+                    continue
+                cliente_enc = clientes_loja[cliente_idx % len(clientes_loja)]
+                enc = Encomenda(
+                    numero=numero,
+                    loja_id=loja_enc.id,
+                    cliente_id=cliente_enc.id,
+                    **dados
+                )
+                db.add(enc)
+                numero += 1
+            print("✅ Encomendas mock inseridas")
 
         db.commit()
         print("\n🎉 Seed completo!")
